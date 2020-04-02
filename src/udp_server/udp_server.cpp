@@ -3,9 +3,11 @@
 //
 
 #include <udp_server/udp_server.h>
-#include <udp_server/udp_client.h>
+#include <controller/controller.h>
 #include <cstdio>
 #include <memory>
+#include <thread>
+
 
 udp_server::udp_server(int port) {
 int res = 0;
@@ -13,38 +15,36 @@ int res = 0;
     res = init_windows();
     if(res < 0) printf("Failed to init wsa: %d\n", res);
     #endif
-    this->server_sock_fd = socket(AF_INET, SOCK_DGRAM, NULL);
+    this->server_sock_fd = socket(AF_INET, SOCK_DGRAM, 0);
     if(this->server_sock_fd < 0) {
         printf("socket() fail!\n");
         return;
     }
-    struct sockaddr_in srv_addr;
+    sockaddr_in srv_addr;
     memset(&srv_addr, 0, sizeof(srv_addr));
     srv_addr.sin_port = htons(port);
     srv_addr.sin_family = AF_INET;
     srv_addr.sin_addr.s_addr = INADDR_ANY;
-    if(bind(this->server_sock_fd, reinterpret_cast<struct sockaddr*>(&srv_addr), sizeof(srv_addr)) < 0) {
+    if(bind(this->server_sock_fd, reinterpret_cast<sockaddr*>(&srv_addr), sizeof(srv_addr)) < 0) {
         printf("bind() fail!\n");
         return;
     }
+
 }
 
 int udp_server::socket_listen() {
-    if(listen(this->server_sock_fd, NULL) < 0) {
-        return -81;
-    }
     this->running = true;
-    while(this->running) {
-        struct sockaddr_in cli_addr;
-        socklen_t cli_len = sizeof(cli_addr);
-        int client_sock_fd = accept(this->server_sock_fd, reinterpret_cast<struct sockaddr*>(&cli_addr), &cli_len);
-        if(client_sock_fd < 0) {
-            printf("accept() failed!\n");
-        } else {
-            auto client = std::make_unique<udp_client>(client_sock_fd, cli_addr);
-
+    while (this->running) {
+        sockaddr_in cli_addr;
+        int cli_addr_len = sizeof(cli_addr);
+        char *auth_buf = new char[4];
+        memset(&cli_addr, 0, cli_addr_len);
+        memset(auth_buf, 0, 4);
+        recvfrom(this->server_sock_fd, auth_buf, 4, 0, reinterpret_cast<sockaddr *>(&cli_addr), &cli_addr_len);
+        if (auth_buf[0] == 1 && auth_buf[1] == 4 && auth_buf[2] == 2 && auth_buf[3] == 9) {
+            // Creating a client
+            std::thread([&]{(new controller(this->server_sock_fd, cli_addr))->handle();}).detach();
         }
-
     }
     return 0;
 }
