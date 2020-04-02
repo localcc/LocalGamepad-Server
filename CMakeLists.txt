@@ -10,13 +10,15 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 set(udp_server_src
         ${CMAKE_CURRENT_SOURCE_DIR}/include/udp_server/udp_server.h
-        ${CMAKE_CURRENT_SOURCE_DIR}/include/udp_server/udp_client.h
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/udp_server/udp_server.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/udp_server/udp_client.cpp)
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/udp_server/udp_server.cpp)
 
 set(controller_src
         ${CMAKE_CURRENT_SOURCE_DIR}/include/controller/controller.h
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/controller/controller.cpp)
+        ${CMAKE_CURRENT_SOURCE_DIR}/include/controller/controller_offsets.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/include/controller/controller_conversions.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/controller/controller.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/controller/controller_conversions.cpp
+        )
 
 add_executable(${PROJECT_NAME} main.cpp ${udp_server_src} ${controller_src})
 

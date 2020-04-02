@@ -5,10 +5,14 @@
 #ifndef LOCALGAMEPAD_SERVER_UDP_SERVER_H
 #define LOCALGAMEPAD_SERVER_UDP_SERVER_H
 
+#include <map>
+#include <memory>
+
 #ifdef WIN32
 #include <winsock2.h>
 #include <ws2tcpip.h>
 #endif
+
 
 class udp_server {
 public:

@@ -1,6 +1,10 @@
 #include <iostream>
+#include <udp_server/udp_server.h>
 
 int main() {
-    std::cout << "Hello world!\n";
+    auto server = std::make_shared<udp_server>(5781);
+    int res = server->socket_listen();
+    printf("%d\n", res);
+
     return 0;
 }
