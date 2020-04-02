@@ -46,6 +46,7 @@ int udp_server::socket_listen() {
         }
 
     }
+    return 0;
 }
 
 udp_server::~udp_server() {

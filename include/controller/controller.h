@@ -13,7 +13,7 @@ public:
     void handle();
     ~controller();
 private:
-    void windows_handle();
+    int windows_handle(int type);
     void linux_handle();
     std::unique_ptr<udp_client> client;
 };
