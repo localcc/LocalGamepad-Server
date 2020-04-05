@@ -1,25 +1,18 @@
-//
-// Created by local on 02.04.2020.
-//
+#ifndef _C360_OFF_H_
+#define _C360_OFF_H_
 
-#ifndef LOCALGAMEPAD_SERVER_CONTROLLER_OFFSETS_H
-#define LOCALGAMEPAD_SERVER_CONTROLLER_OFFSETS_H
-
-#define GB_OFF_X 1
-#define GB_OFF_B 2
+#define GB_OFF_B 1
+#define GB_OFF_X 2
 #define GB_OFF_Y 3
-#define GB_OFF_LB 4
-#define GB_OFF_RB 5
-#define GB_OFF_UP 6
-#define GB_OFF_DOWN 7
-#define GB_OFF_RIGHT 1
-#define GB_OFF_S1_Z 2
-#define GB_OFF_S2_Z 3
-#define GB_OFF_START 4
-#define GB_OFF_BACK 5
-#define GB_OFF_LOGO 6
+#define GB_OFF_SEL 4
+#define GB_OFF_START 6
+#define GB_OFF_S1_Z 7
+//No s2_z as it is first in second received byte
+#define GB_OFF_LB 1
+#define GB_OFF_RB 2
+#define GB_OFF_UP 3
+#define GB_OFF_DOWN 4
+#define GB_OFF_LEFT 5
+#define GB_OFF_RIGHT 6
 
-#define RUMBLE_LEFT 1
-#define RUMBLE_RIGHT 2
-
-#endif //LOCALGAMEPAD_SERVER_CONTROLLER_OFFSETS_H
+#endif // _C360_OFF_H_

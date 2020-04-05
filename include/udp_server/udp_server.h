@@ -7,6 +7,8 @@
 
 #include <map>
 #include <memory>
+#include <functional>
+#include <controller/controller.h>
 
 #ifdef WIN32
 #include <winsock2.h>
@@ -16,13 +18,23 @@
 
 class udp_server {
 public:
-    udp_server(int port);
-    int socket_listen();
+    explicit udp_server(int port);
+    void socket_listen();
     ~udp_server();
 private:
-    int init_windows();
+    char last_client_id;
+    static int init_windows();
+    static void handle_connect(udp_server* server, sockaddr_in cli_addr, unsigned char* data);
+    static void handle_data(udp_server* server, sockaddr_in cli_addr, unsigned char* data);
+    static void handle_disconnect(udp_server* server, sockaddr_in cli_addr, unsigned char* data);
     int server_sock_fd;
     bool running;
+    const std::map<uint8_t, std::function<void(udp_server*, const sockaddr_in, unsigned char* data)>> command_handlers = {
+            {6, &handle_connect},
+            {1, &handle_data},
+            {9, &handle_disconnect}
+    };
+    std::map<unsigned char, std::unique_ptr<controller>> id_controller_mapping;
 };
 
 #endif //LOCALGAMEPAD_SERVER_UDP_SERVER_H
