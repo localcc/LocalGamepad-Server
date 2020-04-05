@@ -82,7 +82,6 @@ void udp_server::handle_data(udp_server *server, sockaddr_in cli_addr, unsigned 
     auto search = server->id_controller_mapping.find(data[0]);
     if(search != server->id_controller_mapping.end()) {
         // adding 1 to pointer so data would be handled correctly
-        printf("Data\n");
         search->second->handle(data + 1);
     }
 }
