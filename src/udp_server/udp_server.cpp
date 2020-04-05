@@ -50,6 +50,10 @@ void udp_server::socket_listen() {
     delete[] buf;
 }
 
+void udp_server::stop() {
+    this->running = false;
+}
+
 void udp_server::handle_connect(udp_server *server, sockaddr_in cli_addr, unsigned char* data) {
     if(data[0] == 6 && data[1] == 4 && data[2] == 2 && data[3] == 9) {
         auto controller_instance = std::make_unique<controller>();

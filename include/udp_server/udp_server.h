@@ -20,6 +20,7 @@ class udp_server {
 public:
     explicit udp_server(int port);
     void socket_listen();
+    void stop();
     ~udp_server();
 private:
     char last_client_id;
