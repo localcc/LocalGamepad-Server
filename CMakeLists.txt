@@ -15,9 +15,10 @@ set(udp_server_src
 set(controller_src
         ${CMAKE_CURRENT_SOURCE_DIR}/include/controller/controller.h
         ${CMAKE_CURRENT_SOURCE_DIR}/include/controller/controller_offsets.h
-        ${CMAKE_CURRENT_SOURCE_DIR}/include/controller/controller_conversions.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/include/controller/controller_conversion.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/include/controller/controller_offsets.h
         ${CMAKE_CURRENT_SOURCE_DIR}/src/controller/controller.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/controller/controller_conversions.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/controller/controller_conversion.cpp
         )
 
 add_executable(${PROJECT_NAME} main.cpp ${udp_server_src} ${controller_src})

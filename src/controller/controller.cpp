@@ -3,38 +3,44 @@
 //
 
 #include <controller/controller.h>
-#include <controller/controller_conversions.h>
-#include <cstdio>
+#include <controller/controller_conversion.h>
 
-int controller::handle() {
+int controller::handle(unsigned char* data) {
 #ifdef WIN32
-    return handle_windows();
-#else
-    return handle_linux();
+    return handle_windows(data);
 #endif
 }
 
-int controller::handle_windows() {
+int controller::init() {
+#ifdef WIN32
+    return init_windows();
+#endif
+}
+
+void controller::uninit() const {
+#ifdef WIN32
+    stop_windows();
+#endif
+}
+
+int controller::init_windows() {
     this->driver_client = vigem_alloc();
     this->driver_target = vigem_target_x360_alloc();
     if (vigem_connect(this->driver_client) != VIGEM_ERROR_NONE) return -80;
     if (vigem_target_add(this->driver_client, this->driver_target) != VIGEM_ERROR_NONE) return -81;
-    char* recv_buf = new char[14];
-    int cli_len = sizeof(this->cli_addr);
-    int recv_len = 0;
-    do {
-        memset(recv_buf, 0, 14);
-        recv_len = recvfrom(this->sock_fd, recv_buf, 14, NULL, reinterpret_cast<sockaddr*>(&this->cli_addr), &cli_len);
-        if(recv_len <= 0) break;
-        vigem_target_x360_update(this->driver_client, this->driver_target, controller_conversions::data_to_report(recv_buf));
-    }while(recv_len > 0);
-    delete recv_buf;
+    return 0;
+}
+
+int controller::handle_windows(unsigned char* data) {
+    vigem_target_x360_update(this->driver_client, this->driver_target, controller_conversion::data_to_report(data));
+    return 0;
+}
+
+
+void controller::stop_windows() const {
     vigem_target_remove(this->driver_client, this->driver_target);
     vigem_disconnect(this->driver_client);
     vigem_target_free(this->driver_target);
     vigem_free(this->driver_client);
 }
-int controller::handle_linux() {
-    //TODO: realization
-    return 0;
-}
+

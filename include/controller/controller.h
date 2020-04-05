@@ -4,28 +4,28 @@
 
 #ifndef LOCALGAMEPAD_SERVER_CONTROLLER_H
 #define LOCALGAMEPAD_SERVER_CONTROLLER_H
+#include <cstdio>
 
 #ifdef WIN32
 #include <ws2tcpip.h>
 #include <winsock2.h>
 #include <ViGEm/Common.h>
 #include <ViGEm/Client.h>
-#include <cstdio>
-
 #endif
 
 class controller {
 public:
-    controller(int sock_fd, sockaddr_in cli_addr): sock_fd{sock_fd}, cli_addr(cli_addr){}
-    int handle();
+    controller() = default;
+    int handle(unsigned char* data);
+    int init();
+    void uninit() const;
 private:
-    int handle_windows();
-    int handle_linux();
-    int sock_fd;
-    sockaddr_in cli_addr;
+    int init_windows();
+    int handle_windows(unsigned char* data);
+    void stop_windows() const;
 #ifdef WIN32
-    PVIGEM_TARGET driver_target;
-    PVIGEM_CLIENT driver_client;
+    PVIGEM_TARGET driver_target{};
+    PVIGEM_CLIENT driver_client{};
 #endif
 };
 
